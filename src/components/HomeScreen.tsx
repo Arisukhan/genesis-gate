@@ -1,0 +1,235 @@
+import { useState } from "react";
+import { Home, BookOpen, GitBranch, Activity, Settings, Package, User } from "lucide-react";
+
+interface NavItem {
+  icon: React.ElementType;
+  label: string;
+  id: string;
+}
+
+const navItems: NavItem[] = [
+  { icon: Home, label: "HOME", id: "home" },
+  { icon: BookOpen, label: "QUEST LIBRARY", id: "quests" },
+  { icon: GitBranch, label: "SKILL TREE", id: "skills" },
+  { icon: Activity, label: "TRACK LOG", id: "tracking" },
+];
+
+const sampleHabits = [
+  { id: 1, name: "Drink Water", completed: true },
+  { id: 2, name: "Read a Chapter", completed: true },
+  { id: 3, name: "Meditation", completed: true },
+];
+
+const HomeScreen = () => {
+  const [activeNav, setActiveNav] = useState("home");
+  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
+  const [playerLevel] = useState(45);
+  const [playerXP] = useState(65); // percentage
+  const codename = localStorage.getItem("userCodename") || "PLAYER";
+
+  return (
+    <div className="fixed inset-0 system-background overflow-hidden">
+      {/* Ambient particle effect */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-primary/3 rounded-full blur-3xl animate-pulse-glow" />
+        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-primary/2 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/1 rounded-full blur-3xl" />
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          TOP HUD - PLAYER STATUS (LEFT)
+      ═══════════════════════════════════════════════════════════════ */}
+      <div className="absolute top-4 left-4 z-20 flex items-center gap-4">
+        {/* Profile Avatar */}
+        <div className="relative">
+          <div className="w-14 h-14 rounded-full bg-secondary/50 border-2 border-primary/40 flex items-center justify-center overflow-hidden shadow-[0_0_15px_hsl(var(--primary)/0.3)]">
+            <User className="w-7 h-7 text-primary/60" />
+          </div>
+        </div>
+
+        {/* Level & XP */}
+        <div className="flex flex-col gap-1">
+          <span className="font-system text-foreground text-lg tracking-wider font-bold">
+            LVL {playerLevel}
+          </span>
+          <div className="flex items-center gap-2">
+            <span className="font-system text-primary/60 text-xs tracking-wide">XP</span>
+            <div className="w-24 h-2 bg-secondary/50 rounded-full overflow-hidden border border-primary/20">
+              <div 
+                className="h-full bg-gradient-to-r from-primary/60 to-primary rounded-full transition-all duration-500 shadow-[0_0_8px_hsl(var(--primary)/0.5)]"
+                style={{ width: `${playerXP}%` }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          TOP RIGHT - UTILITY ICONS
+      ═══════════════════════════════════════════════════════════════ */}
+      <div className="absolute top-4 right-4 z-20 flex items-center gap-4">
+        {/* Settings */}
+        <button className="group flex flex-col items-center gap-1">
+          <div className="w-12 h-12 rounded-full bg-secondary/40 border border-primary/30 flex items-center justify-center transition-all duration-300 group-hover:border-primary/60 group-hover:shadow-[0_0_15px_hsl(var(--primary)/0.4)] group-hover:scale-105">
+            <Settings className="w-5 h-5 text-primary/70 group-hover:text-primary transition-colors" />
+          </div>
+          <span className="font-system text-[10px] text-primary/60 tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+            SETTINGS
+          </span>
+        </button>
+
+        {/* Inventory */}
+        <button className="group flex flex-col items-center gap-1">
+          <div className="w-12 h-12 rounded-full bg-secondary/40 border border-primary/30 flex items-center justify-center transition-all duration-300 group-hover:border-primary/60 group-hover:shadow-[0_0_15px_hsl(var(--primary)/0.4)] group-hover:scale-105">
+            <Package className="w-5 h-5 text-primary/70 group-hover:text-primary transition-colors" />
+          </div>
+          <span className="font-system text-[10px] text-primary/60 tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+            INVENTORY
+          </span>
+        </button>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          LEFT NAVIGATION PANEL
+      ═══════════════════════════════════════════════════════════════ */}
+      <div className="absolute left-4 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-4">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeNav === item.id;
+          const isHovered = hoveredNav === item.id;
+
+          return (
+            <button
+              key={item.id}
+              onClick={() => setActiveNav(item.id)}
+              onMouseEnter={() => setHoveredNav(item.id)}
+              onMouseLeave={() => setHoveredNav(null)}
+              className="group flex items-center gap-3"
+            >
+              <div
+                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 border ${
+                  isActive
+                    ? "bg-primary/20 border-primary/60 shadow-[0_0_20px_hsl(var(--primary)/0.5)]"
+                    : "bg-secondary/40 border-primary/30 hover:border-primary/50 hover:shadow-[0_0_12px_hsl(var(--primary)/0.3)]"
+                }`}
+              >
+                <Icon
+                  className={`w-5 h-5 transition-colors ${
+                    isActive ? "text-primary" : "text-primary/60 group-hover:text-primary/80"
+                  }`}
+                />
+              </div>
+              <span
+                className={`font-system text-xs tracking-wider whitespace-nowrap transition-all duration-300 ${
+                  isHovered || isActive
+                    ? "opacity-100 translate-x-0"
+                    : "opacity-0 -translate-x-2 pointer-events-none"
+                } ${isActive ? "text-primary" : "text-primary/70"}`}
+              >
+                {item.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          CENTER MAIN AREA - ACTION ZONE
+      ═══════════════════════════════════════════════════════════════ */}
+      <div className="absolute inset-0 flex items-center justify-center pt-16 pl-20 pr-4">
+        <div className="flex gap-6 max-w-5xl w-full">
+          {/* DAILY QUESTS CARD */}
+          <button className="flex-1 group cursor-pointer">
+            <div className="glow-border glass-panel rounded-lg p-6 h-80 flex flex-col transition-all duration-300 group-hover:shadow-[0_0_30px_hsl(var(--primary)/0.3)]">
+              {/* Header */}
+              <h2 className="font-system text-foreground text-xl tracking-[0.15em] uppercase text-center mb-6 group-hover:text-primary transition-colors">
+                DAILY QUESTS
+              </h2>
+
+              {/* Divider */}
+              <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mb-6" />
+
+              {/* Empty content placeholder */}
+              <div className="flex-1 flex flex-col items-start justify-start gap-4 px-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-5 h-5 border border-primary/40 rounded-sm" />
+                  <span className="text-muted-foreground/40 text-sm">Quest placeholder</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-5 h-5 border border-primary/30 rounded-sm" />
+                  <span className="text-muted-foreground/30 text-sm">Quest placeholder</span>
+                </div>
+              </div>
+
+              {/* Hint */}
+              <div className="text-center">
+                <span className="text-primary/40 text-xs font-system tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+                  TAP TO EXPAND
+                </span>
+              </div>
+            </div>
+          </button>
+
+          {/* HABITS CARD */}
+          <button className="flex-1 group cursor-pointer">
+            <div className="glow-border glass-panel rounded-lg p-6 h-80 flex flex-col transition-all duration-300 group-hover:shadow-[0_0_30px_hsl(var(--primary)/0.3)]">
+              {/* Header */}
+              <h2 className="font-system text-foreground text-xl tracking-[0.15em] uppercase text-center mb-6 group-hover:text-primary transition-colors">
+                HABITS
+              </h2>
+
+              {/* Divider */}
+              <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mb-6" />
+
+              {/* Habits list (status only) */}
+              <div className="flex-1 flex flex-col items-start justify-start gap-4 px-4">
+                {sampleHabits.map((habit) => (
+                  <div key={habit.id} className="flex items-center gap-3">
+                    <div
+                      className={`w-5 h-5 rounded-sm flex items-center justify-center ${
+                        habit.completed
+                          ? "bg-emerald-500/20 border border-emerald-500/60"
+                          : "border border-primary/40"
+                      }`}
+                    >
+                      {habit.completed && (
+                        <svg
+                          className="w-3 h-3 text-emerald-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={3}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </div>
+                    <span className={`text-sm ${habit.completed ? "text-foreground/80" : "text-muted-foreground/60"}`}>
+                      {habit.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Hint */}
+              <div className="text-center">
+                <span className="text-primary/40 text-xs font-system tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+                  TAP TO EXPAND
+                </span>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      {/* Codename display (subtle) */}
+      <div className="absolute bottom-4 left-4 z-20">
+        <span className="font-system text-xs text-primary/30 tracking-widest uppercase">
+          {codename}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+export default HomeScreen;
