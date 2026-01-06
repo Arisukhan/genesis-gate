@@ -2,6 +2,15 @@ import { useState } from "react";
 import { Home, BookOpen, GitBranch, Activity, Settings, Package, User } from "lucide-react";
 import QuestWindow from "./quest/QuestWindow";
 import HabitWindow from "./habit/HabitWindow";
+import {
+  SystemCard,
+  SystemCardTitle,
+  SystemCardDivider,
+  SystemCardContent,
+  SystemCardFooter,
+  SystemCardHint,
+} from "./ui/system-card";
+import { useTheme, themeMetadata, ThemeName } from "@/hooks/useTheme";
 
 interface NavItem {
   icon: React.ElementType;
@@ -26,10 +35,12 @@ const HomeScreen = () => {
   const [activeNav, setActiveNav] = useState("home");
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const [playerLevel] = useState(45);
-  const [playerXP] = useState(65); // percentage
+  const [playerXP] = useState(65);
   const [isQuestWindowOpen, setIsQuestWindowOpen] = useState(false);
   const [isHabitWindowOpen, setIsHabitWindowOpen] = useState(false);
+  const [showThemeSelector, setShowThemeSelector] = useState(false);
   const codename = localStorage.getItem("userCodename") || "PLAYER";
+  const { theme, setTheme, themes } = useTheme();
 
   return (
     <div className="fixed inset-0 system-background overflow-hidden">
@@ -52,7 +63,7 @@ const HomeScreen = () => {
       <div className="absolute top-4 left-4 z-20 flex items-center gap-4">
         {/* Profile Avatar */}
         <div className="relative">
-          <div className="w-14 h-14 rounded-full bg-secondary/50 border-2 border-primary/40 flex items-center justify-center overflow-hidden shadow-[0_0_15px_hsl(var(--primary)/0.3)]">
+          <div className="w-14 h-14 rounded-full bg-secondary/50 border-2 border-primary/40 flex items-center justify-center overflow-hidden shadow-glow-md">
             <User className="w-7 h-7 text-primary/60" />
           </div>
         </div>
@@ -66,7 +77,7 @@ const HomeScreen = () => {
             <span className="font-system text-primary/60 text-xs tracking-wide">XP</span>
             <div className="w-24 h-2 bg-secondary/50 rounded-full overflow-hidden border border-primary/20">
               <div 
-                className="h-full bg-gradient-to-r from-primary/60 to-primary rounded-full transition-all duration-500 shadow-[0_0_8px_hsl(var(--primary)/0.5)]"
+                className="h-full bg-gradient-to-r from-primary/60 to-primary rounded-full transition-all duration-slow shadow-glow-sm"
                 style={{ width: `${playerXP}%` }}
               />
             </div>
@@ -78,19 +89,55 @@ const HomeScreen = () => {
           TOP RIGHT - UTILITY ICONS
       ═══════════════════════════════════════════════════════════════ */}
       <div className="absolute top-4 right-4 z-20 flex items-center gap-4">
-        {/* Settings */}
-        <button className="group flex flex-col items-center gap-1">
-          <div className="w-12 h-12 rounded-full bg-secondary/40 border border-primary/30 flex items-center justify-center transition-all duration-300 group-hover:border-primary/60 group-hover:shadow-[0_0_15px_hsl(var(--primary)/0.4)] group-hover:scale-105">
-            <Settings className="w-5 h-5 text-primary/70 group-hover:text-primary transition-colors" />
-          </div>
-          <span className="font-system text-[10px] text-primary/60 tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
-            SETTINGS
-          </span>
-        </button>
+        {/* Settings with Theme Selector */}
+        <div className="relative">
+          <button 
+            className="group flex flex-col items-center gap-1"
+            onClick={() => setShowThemeSelector(!showThemeSelector)}
+          >
+            <div className="w-12 h-12 rounded-full bg-secondary/40 border border-primary/30 flex items-center justify-center transition-all duration-normal group-hover:border-primary/60 group-hover:shadow-glow-md group-hover:scale-105">
+              <Settings className="w-5 h-5 text-primary/70 group-hover:text-primary transition-colors" />
+            </div>
+            <span className="font-system text-[10px] text-primary/60 tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+              SETTINGS
+            </span>
+          </button>
+          
+          {/* Theme Selector Dropdown */}
+          {showThemeSelector && (
+            <div className="absolute top-16 right-0 system-card p-3 min-w-[140px] animate-fade-in z-50">
+              <span className="font-system text-[10px] text-muted-foreground tracking-wider block mb-2">
+                THEME
+              </span>
+              <div className="flex flex-col gap-1">
+                {themes.map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => {
+                      setTheme(t);
+                      setShowThemeSelector(false);
+                    }}
+                    className={`flex items-center gap-2 px-2 py-1.5 rounded transition-colors ${
+                      theme === t ? "bg-primary/20" : "hover:bg-secondary/50"
+                    }`}
+                  >
+                    <div
+                      className="w-3 h-3 rounded-full border border-white/20"
+                      style={{ backgroundColor: themeMetadata[t].color }}
+                    />
+                    <span className="font-system text-xs text-foreground">
+                      {themeMetadata[t].label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Inventory */}
         <button className="group flex flex-col items-center gap-1">
-          <div className="w-12 h-12 rounded-full bg-secondary/40 border border-primary/30 flex items-center justify-center transition-all duration-300 group-hover:border-primary/60 group-hover:shadow-[0_0_15px_hsl(var(--primary)/0.4)] group-hover:scale-105">
+          <div className="w-12 h-12 rounded-full bg-secondary/40 border border-primary/30 flex items-center justify-center transition-all duration-normal group-hover:border-primary/60 group-hover:shadow-glow-md group-hover:scale-105">
             <Package className="w-5 h-5 text-primary/70 group-hover:text-primary transition-colors" />
           </div>
           <span className="font-system text-[10px] text-primary/60 tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
@@ -117,10 +164,10 @@ const HomeScreen = () => {
               className="group flex items-center gap-3"
             >
               <div
-                className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 border ${
+                className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-normal border ${
                   isActive
-                    ? "bg-primary/20 border-primary/60 shadow-[0_0_20px_hsl(var(--primary)/0.5)]"
-                    : "bg-secondary/40 border-primary/30 hover:border-primary/50 hover:shadow-[0_0_12px_hsl(var(--primary)/0.3)]"
+                    ? "bg-primary/20 border-primary/60 shadow-glow-lg"
+                    : "bg-secondary/40 border-primary/30 hover:border-primary/50 hover:shadow-glow-sm"
                 }`}
               >
                 <Icon
@@ -130,7 +177,7 @@ const HomeScreen = () => {
                 />
               </div>
               <span
-                className={`font-system text-xs tracking-wider whitespace-nowrap transition-all duration-300 absolute left-14 sm:left-16 bg-secondary/80 px-2 py-1 rounded ${
+                className={`font-system text-xs tracking-wider whitespace-nowrap transition-all duration-normal absolute left-14 sm:left-16 bg-secondary/80 px-2 py-1 rounded ${
                   isHovered
                     ? "opacity-100 translate-x-0"
                     : "opacity-0 -translate-x-2 pointer-events-none"
@@ -150,17 +197,12 @@ const HomeScreen = () => {
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 max-w-5xl w-full px-4 sm:px-0">
           {/* DAILY QUESTS CARD */}
           <button className="flex-1 group cursor-pointer" onClick={() => setIsQuestWindowOpen(true)}>
-            <div className="glow-border glass-panel rounded-lg p-4 sm:p-6 min-h-[200px] sm:h-80 flex flex-col transition-all duration-300 group-hover:shadow-[0_0_30px_hsl(var(--primary)/0.3)]">
-              {/* Header */}
-              <h2 className="font-system text-foreground text-lg sm:text-xl tracking-[0.15em] uppercase text-center mb-4 sm:mb-6 group-hover:text-primary transition-colors">
+            <SystemCard interactive className="min-h-[200px] sm:h-80 flex flex-col">
+              <SystemCardTitle className="group-hover:text-primary transition-colors">
                 DAILY QUESTS
-              </h2>
-
-              {/* Divider */}
-              <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mb-4 sm:mb-6" />
-
-              {/* Empty content placeholder */}
-              <div className="flex-1 flex flex-col items-start justify-start gap-3 sm:gap-4 px-2 sm:px-4">
+              </SystemCardTitle>
+              <SystemCardDivider />
+              <SystemCardContent className="items-start justify-start gap-3 sm:gap-4 px-2 sm:px-4">
                 <div className="flex items-center gap-3">
                   <div className="w-4 h-4 sm:w-5 sm:h-5 border border-primary/40 rounded-sm" />
                   <span className="text-muted-foreground/40 text-xs sm:text-sm">Quest placeholder</span>
@@ -169,42 +211,33 @@ const HomeScreen = () => {
                   <div className="w-4 h-4 sm:w-5 sm:h-5 border border-primary/30 rounded-sm" />
                   <span className="text-muted-foreground/30 text-xs sm:text-sm">Quest placeholder</span>
                 </div>
-              </div>
-
-              {/* Hint */}
-              <div className="text-center">
-                <span className="text-primary/40 text-[10px] sm:text-xs font-system tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
-                  TAP TO EXPAND
-                </span>
-              </div>
-            </div>
+              </SystemCardContent>
+              <SystemCardFooter>
+                <SystemCardHint>TAP TO EXPAND</SystemCardHint>
+              </SystemCardFooter>
+            </SystemCard>
           </button>
 
           {/* HABITS CARD */}
           <button className="flex-1 group cursor-pointer" onClick={() => setIsHabitWindowOpen(true)}>
-            <div className="glow-border glass-panel rounded-lg p-4 sm:p-6 min-h-[200px] sm:h-80 flex flex-col transition-all duration-300 group-hover:shadow-[0_0_30px_hsl(var(--primary)/0.3)]">
-              {/* Header */}
-              <h2 className="font-system text-foreground text-lg sm:text-xl tracking-[0.15em] uppercase text-center mb-4 sm:mb-6 group-hover:text-primary transition-colors">
+            <SystemCard interactive className="min-h-[200px] sm:h-80 flex flex-col">
+              <SystemCardTitle className="group-hover:text-primary transition-colors">
                 HABITS
-              </h2>
-
-              {/* Divider */}
-              <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mb-4 sm:mb-6" />
-
-              {/* Habits list (status only) */}
-              <div className="flex-1 flex flex-col items-start justify-start gap-3 sm:gap-4 px-2 sm:px-4">
+              </SystemCardTitle>
+              <SystemCardDivider />
+              <SystemCardContent className="items-start justify-start gap-3 sm:gap-4 px-2 sm:px-4">
                 {sampleHabits.map((habit) => (
                   <div key={habit.id} className="flex items-center gap-3">
                     <div
                       className={`w-4 h-4 sm:w-5 sm:h-5 rounded-sm flex items-center justify-center ${
                         habit.completed
-                          ? "bg-emerald-500/20 border border-emerald-500/60"
+                          ? "bg-success/20 border border-success/60"
                           : "border border-primary/40"
                       }`}
                     >
                       {habit.completed && (
                         <svg
-                          className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-400"
+                          className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-success"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -219,15 +252,11 @@ const HomeScreen = () => {
                     </span>
                   </div>
                 ))}
-              </div>
-
-              {/* Hint */}
-              <div className="text-center">
-                <span className="text-primary/40 text-[10px] sm:text-xs font-system tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
-                  TAP TO EXPAND
-                </span>
-              </div>
-            </div>
+              </SystemCardContent>
+              <SystemCardFooter>
+                <SystemCardHint>TAP TO EXPAND</SystemCardHint>
+              </SystemCardFooter>
+            </SystemCard>
           </button>
         </div>
       </div>
@@ -238,6 +267,14 @@ const HomeScreen = () => {
           {codename}
         </span>
       </div>
+      
+      {/* Click outside to close theme selector */}
+      {showThemeSelector && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => setShowThemeSelector(false)}
+        />
+      )}
     </div>
   );
 };
