@@ -152,10 +152,12 @@ const QuestWindow = ({ isOpen, onClose }: QuestWindowProps) => {
       className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-300 ${
         isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
-      onClick={handleOutsideClick}
     >
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
+      {/* Backdrop - clicking this closes everything */}
+      <div 
+        className="absolute inset-0 bg-background/80 backdrop-blur-sm cursor-pointer" 
+        onClick={onClose}
+      />
 
       {/* Main Window */}
       <div
