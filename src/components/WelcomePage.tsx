@@ -8,39 +8,40 @@ interface WelcomePageProps {
 const WelcomePage = ({ onAccept }: WelcomePageProps) => {
   const [noCount, setNoCount] = useState(0);
   const [showWarning, setShowWarning] = useState(false);
-  const [warningMessage, setWarningMessage] = useState("");
+  const [warningLevel, setWarningLevel] = useState<1 | 2>(1);
   const [isExiting, setIsExiting] = useState(false);
   const [isTerminated, setIsTerminated] = useState(false);
 
   const handleYes = useCallback(() => {
+    if (showWarning) return; // Prevent action during warning
     setIsExiting(true);
-    // Store acceptance in localStorage
     localStorage.setItem("hasAcceptedSystem", "true");
     localStorage.removeItem("noCount");
     setTimeout(() => {
       onAccept();
     }, 500);
-  }, [onAccept]);
+  }, [onAccept, showWarning]);
 
   const handleNo = useCallback(() => {
+    if (showWarning) return; // Prevent action during warning
+    
     const newCount = noCount + 1;
     setNoCount(newCount);
     localStorage.setItem("noCount", String(newCount));
 
     if (newCount === 1) {
-      setWarningMessage("Refusing the system will result in termination.");
+      setWarningLevel(1);
       setShowWarning(true);
     } else if (newCount === 2) {
-      setWarningMessage("Further refusal will terminate the application.");
+      setWarningLevel(2);
       setShowWarning(true);
     } else if (newCount >= 3) {
-      // Terminate - show black screen
       setIsTerminated(true);
       localStorage.setItem("isTerminated", "true");
     }
-  }, [noCount]);
+  }, [noCount, showWarning]);
 
-  // Auto-hide warning after 5 seconds
+  // Auto-hide warning after 5 seconds and return to normal state
   useEffect(() => {
     if (showWarning) {
       const timer = setTimeout(() => {
@@ -73,6 +74,23 @@ const WelcomePage = ({ onAccept }: WelcomePageProps) => {
     );
   }
 
+  const getBorderClass = () => {
+    if (!showWarning) return "glow-border";
+    return warningLevel === 2 ? "glow-border danger-border" : "glow-border warning-border";
+  };
+
+  const getHeaderColor = () => {
+    if (!showWarning) return "text-primary";
+    return warningLevel === 2 ? "text-danger-glow" : "text-warning-glow";
+  };
+
+  const getIconColor = () => {
+    if (!showWarning) return "border-primary/60 text-primary";
+    return warningLevel === 2 
+      ? "border-danger-glow/60 text-danger-glow" 
+      : "border-warning-glow/60 text-warning-glow";
+  };
+
   return (
     <div className="fixed inset-0 system-background flex items-center justify-center overflow-hidden">
       {/* Ambient particles effect */}
@@ -81,67 +99,70 @@ const WelcomePage = ({ onAccept }: WelcomePageProps) => {
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-primary/3 rounded-full blur-3xl" />
       </div>
 
-      {/* Warning Toast */}
-      {showWarning && (
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 z-50 animate-slide-down">
-          <div className={`glow-border ${noCount === 2 ? 'danger-border' : 'warning-border'} glass-panel rounded-lg px-6 py-4`}>
-            <div className="flex items-center gap-3">
-              <AlertCircle className={`w-5 h-5 ${noCount === 2 ? 'text-danger-glow' : 'text-warning-glow'}`} />
-              <div>
-                <p className={`font-system text-xs uppercase tracking-wider ${noCount === 2 ? 'text-danger-glow' : 'text-warning-glow'}`}>
-                  {noCount === 2 ? 'FINAL WARNING' : 'WARNING'}
-                </p>
-                <p className="text-foreground/90 text-sm mt-1">
-                  {warningMessage}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Main System Card */}
       <div
         className={`relative z-10 ${isExiting ? 'animate-fade-out' : 'animate-fade-in'} animate-float`}
       >
-        <div className="glow-border glass-panel rounded-lg w-[90vw] max-w-md p-8">
+        <div className={`${getBorderClass()} glass-panel rounded-lg w-[90vw] max-w-md p-8 transition-all duration-300`}>
           {/* Header */}
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-8 h-8 rounded-full border border-primary/60 flex items-center justify-center animate-pulse-glow">
-              <span className="text-primary font-bold text-lg">!</span>
+            <div className={`w-8 h-8 rounded-full border ${getIconColor()} flex items-center justify-center animate-pulse-glow transition-colors duration-300`}>
+              {showWarning ? (
+                <AlertCircle className="w-5 h-5" />
+              ) : (
+                <span className="font-bold text-lg">!</span>
+              )}
             </div>
-            <h1 className="font-system text-primary text-lg tracking-[0.3em] uppercase animate-text-glow">
-              NOTIFICATION
+            <h1 className={`font-system ${getHeaderColor()} text-lg tracking-[0.3em] uppercase animate-text-glow transition-colors duration-300`}>
+              {showWarning 
+                ? (warningLevel === 2 ? "FINAL WARNING" : "WARNING") 
+                : "NOTIFICATION"
+              }
             </h1>
           </div>
 
           {/* Divider */}
-          <div className="h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent mb-8" />
+          <div className={`h-px bg-gradient-to-r from-transparent ${showWarning ? (warningLevel === 2 ? 'via-danger-glow/40' : 'via-warning-glow/40') : 'via-primary/40'} to-transparent mb-8 transition-colors duration-300`} />
 
-          {/* Main Message */}
-          <div className="text-center mb-10 space-y-2">
-            <p className="text-foreground/90 text-lg leading-relaxed">
-              You have acquired the qualifications
-            </p>
-            <p className="text-foreground/90 text-lg leading-relaxed">
-              to be a <span className="text-primary font-semibold animate-text-glow">Player</span>.
-            </p>
-            <p className="text-foreground/90 text-lg leading-relaxed mt-4">
-              Will you accept?
-            </p>
+          {/* Content - switches between normal and warning */}
+          <div className="text-center mb-10 min-h-[120px] flex flex-col justify-center">
+            {showWarning ? (
+              <div className="animate-fade-in">
+                <p className={`${warningLevel === 2 ? 'text-danger-glow/90' : 'text-warning-glow/90'} text-lg leading-relaxed`}>
+                  {warningLevel === 2 
+                    ? "Further refusal will terminate the application."
+                    : "Refusing the system will result in termination."
+                  }
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <p className="text-foreground/90 text-lg leading-relaxed">
+                  You have acquired the qualifications
+                </p>
+                <p className="text-foreground/90 text-lg leading-relaxed">
+                  to be a <span className="text-primary font-semibold animate-text-glow">Player</span>.
+                </p>
+                <p className="text-foreground/90 text-lg leading-relaxed mt-4">
+                  Will you accept?
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Action Buttons */}
           <div className="flex gap-4">
             <button
               onClick={handleYes}
-              className="flex-1 system-btn-primary text-primary py-3 px-6 rounded font-semibold text-sm"
+              disabled={showWarning}
+              className={`flex-1 system-btn-primary text-primary py-3 px-6 rounded font-semibold text-sm transition-opacity duration-300 ${showWarning ? 'opacity-30 cursor-not-allowed' : ''}`}
             >
               YES
             </button>
             <button
               onClick={handleNo}
-              className="flex-1 system-btn-secondary text-foreground/70 py-3 px-6 rounded font-semibold text-sm"
+              disabled={showWarning}
+              className={`flex-1 system-btn-secondary text-foreground/70 py-3 px-6 rounded font-semibold text-sm transition-opacity duration-300 ${showWarning ? 'opacity-30 cursor-not-allowed' : ''}`}
             >
               NO
             </button>
