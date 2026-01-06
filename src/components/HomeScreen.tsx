@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Home, BookOpen, GitBranch, Activity, Settings, Package, User } from "lucide-react";
 import QuestWindow from "./quest/QuestWindow";
+import HabitWindow from "./habit/HabitWindow";
 
 interface NavItem {
   icon: React.ElementType;
@@ -27,12 +28,16 @@ const HomeScreen = () => {
   const [playerLevel] = useState(45);
   const [playerXP] = useState(65); // percentage
   const [isQuestWindowOpen, setIsQuestWindowOpen] = useState(false);
+  const [isHabitWindowOpen, setIsHabitWindowOpen] = useState(false);
   const codename = localStorage.getItem("userCodename") || "PLAYER";
 
   return (
     <div className="fixed inset-0 system-background overflow-hidden">
       {/* Quest Window Overlay */}
       <QuestWindow isOpen={isQuestWindowOpen} onClose={() => setIsQuestWindowOpen(false)} />
+      
+      {/* Habit Window Overlay */}
+      <HabitWindow isOpen={isHabitWindowOpen} onClose={() => setIsHabitWindowOpen(false)} />
 
       {/* Ambient particle effect */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -176,7 +181,7 @@ const HomeScreen = () => {
           </button>
 
           {/* HABITS CARD */}
-          <button className="flex-1 group cursor-pointer">
+          <button className="flex-1 group cursor-pointer" onClick={() => setIsHabitWindowOpen(true)}>
             <div className="glow-border glass-panel rounded-lg p-4 sm:p-6 min-h-[200px] sm:h-80 flex flex-col transition-all duration-300 group-hover:shadow-[0_0_30px_hsl(var(--primary)/0.3)]">
               {/* Header */}
               <h2 className="font-system text-foreground text-lg sm:text-xl tracking-[0.15em] uppercase text-center mb-4 sm:mb-6 group-hover:text-primary transition-colors">
