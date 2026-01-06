@@ -107,21 +107,21 @@ const HomeScreen = () => {
               className="group flex items-center gap-3"
             >
               <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 border ${
+                className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 border ${
                   isActive
                     ? "bg-primary/20 border-primary/60 shadow-[0_0_20px_hsl(var(--primary)/0.5)]"
                     : "bg-secondary/40 border-primary/30 hover:border-primary/50 hover:shadow-[0_0_12px_hsl(var(--primary)/0.3)]"
                 }`}
               >
                 <Icon
-                  className={`w-5 h-5 transition-colors ${
+                  className={`w-4 h-4 sm:w-5 sm:h-5 transition-colors ${
                     isActive ? "text-primary" : "text-primary/60 group-hover:text-primary/80"
                   }`}
                 />
               </div>
               <span
-                className={`font-system text-xs tracking-wider whitespace-nowrap transition-all duration-300 ${
-                  isHovered || isActive
+                className={`font-system text-xs tracking-wider whitespace-nowrap transition-all duration-300 absolute left-14 sm:left-16 bg-secondary/80 px-2 py-1 rounded ${
+                  isHovered
                     ? "opacity-100 translate-x-0"
                     : "opacity-0 -translate-x-2 pointer-events-none"
                 } ${isActive ? "text-primary" : "text-primary/70"}`}
@@ -136,34 +136,34 @@ const HomeScreen = () => {
       {/* ═══════════════════════════════════════════════════════════════
           CENTER MAIN AREA - ACTION ZONE
       ═══════════════════════════════════════════════════════════════ */}
-      <div className="absolute inset-0 flex items-center justify-center pt-16 pl-20 pr-4">
-        <div className="flex gap-6 max-w-5xl w-full">
+      <div className="absolute inset-0 flex items-center justify-center pt-20 sm:pt-16 pl-16 sm:pl-20 pr-4">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 max-w-5xl w-full px-4 sm:px-0">
           {/* DAILY QUESTS CARD */}
           <button className="flex-1 group cursor-pointer">
-            <div className="glow-border glass-panel rounded-lg p-6 h-80 flex flex-col transition-all duration-300 group-hover:shadow-[0_0_30px_hsl(var(--primary)/0.3)]">
+            <div className="glow-border glass-panel rounded-lg p-4 sm:p-6 min-h-[200px] sm:h-80 flex flex-col transition-all duration-300 group-hover:shadow-[0_0_30px_hsl(var(--primary)/0.3)]">
               {/* Header */}
-              <h2 className="font-system text-foreground text-xl tracking-[0.15em] uppercase text-center mb-6 group-hover:text-primary transition-colors">
+              <h2 className="font-system text-foreground text-lg sm:text-xl tracking-[0.15em] uppercase text-center mb-4 sm:mb-6 group-hover:text-primary transition-colors">
                 DAILY QUESTS
               </h2>
 
               {/* Divider */}
-              <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mb-6" />
+              <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mb-4 sm:mb-6" />
 
               {/* Empty content placeholder */}
-              <div className="flex-1 flex flex-col items-start justify-start gap-4 px-4">
+              <div className="flex-1 flex flex-col items-start justify-start gap-3 sm:gap-4 px-2 sm:px-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 border border-primary/40 rounded-sm" />
-                  <span className="text-muted-foreground/40 text-sm">Quest placeholder</span>
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 border border-primary/40 rounded-sm" />
+                  <span className="text-muted-foreground/40 text-xs sm:text-sm">Quest placeholder</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 border border-primary/30 rounded-sm" />
-                  <span className="text-muted-foreground/30 text-sm">Quest placeholder</span>
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 border border-primary/30 rounded-sm" />
+                  <span className="text-muted-foreground/30 text-xs sm:text-sm">Quest placeholder</span>
                 </div>
               </div>
 
               {/* Hint */}
               <div className="text-center">
-                <span className="text-primary/40 text-xs font-system tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="text-primary/40 text-[10px] sm:text-xs font-system tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
                   TAP TO EXPAND
                 </span>
               </div>
@@ -172,21 +172,21 @@ const HomeScreen = () => {
 
           {/* HABITS CARD */}
           <button className="flex-1 group cursor-pointer">
-            <div className="glow-border glass-panel rounded-lg p-6 h-80 flex flex-col transition-all duration-300 group-hover:shadow-[0_0_30px_hsl(var(--primary)/0.3)]">
+            <div className="glow-border glass-panel rounded-lg p-4 sm:p-6 min-h-[200px] sm:h-80 flex flex-col transition-all duration-300 group-hover:shadow-[0_0_30px_hsl(var(--primary)/0.3)]">
               {/* Header */}
-              <h2 className="font-system text-foreground text-xl tracking-[0.15em] uppercase text-center mb-6 group-hover:text-primary transition-colors">
+              <h2 className="font-system text-foreground text-lg sm:text-xl tracking-[0.15em] uppercase text-center mb-4 sm:mb-6 group-hover:text-primary transition-colors">
                 HABITS
               </h2>
 
               {/* Divider */}
-              <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mb-6" />
+              <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mb-4 sm:mb-6" />
 
               {/* Habits list (status only) */}
-              <div className="flex-1 flex flex-col items-start justify-start gap-4 px-4">
+              <div className="flex-1 flex flex-col items-start justify-start gap-3 sm:gap-4 px-2 sm:px-4">
                 {sampleHabits.map((habit) => (
                   <div key={habit.id} className="flex items-center gap-3">
                     <div
-                      className={`w-5 h-5 rounded-sm flex items-center justify-center ${
+                      className={`w-4 h-4 sm:w-5 sm:h-5 rounded-sm flex items-center justify-center ${
                         habit.completed
                           ? "bg-emerald-500/20 border border-emerald-500/60"
                           : "border border-primary/40"
@@ -194,7 +194,7 @@ const HomeScreen = () => {
                     >
                       {habit.completed && (
                         <svg
-                          className="w-3 h-3 text-emerald-400"
+                          className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-400"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -204,7 +204,7 @@ const HomeScreen = () => {
                         </svg>
                       )}
                     </div>
-                    <span className={`text-sm ${habit.completed ? "text-foreground/80" : "text-muted-foreground/60"}`}>
+                    <span className={`text-xs sm:text-sm ${habit.completed ? "text-foreground/80" : "text-muted-foreground/60"}`}>
                       {habit.name}
                     </span>
                   </div>
@@ -213,7 +213,7 @@ const HomeScreen = () => {
 
               {/* Hint */}
               <div className="text-center">
-                <span className="text-primary/40 text-xs font-system tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="text-primary/40 text-[10px] sm:text-xs font-system tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
                   TAP TO EXPAND
                 </span>
               </div>
