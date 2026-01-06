@@ -118,6 +118,7 @@
     inset: -2px;
     border-radius: inherit;
     padding: 2px;
+    pointer-events: none;
     background: linear-gradient(
       135deg,
       hsl(var(--system-glow) / 0.6) 0%,
