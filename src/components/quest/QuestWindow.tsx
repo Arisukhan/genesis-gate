@@ -134,9 +134,10 @@ const QuestWindow = ({ isOpen, onClose }: QuestWindowProps) => {
     setLevel("list");
   };
 
+  // Outside click always exits to Home (Level 0)
   const handleOutsideClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
-      handleBack();
+      onClose();
     }
   };
 
