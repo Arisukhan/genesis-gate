@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Home, BookOpen, GitBranch, Activity, Settings, Package, User } from "lucide-react";
 import QuestWindow from "./quest/QuestWindow";
 import HabitWindow from "./habit/HabitWindow";
+import QuestLibrary from "./quest-library/QuestLibrary";
 import {
   SystemCard,
   SystemCardTitle,
@@ -31,8 +32,10 @@ const sampleHabits = [
   { id: 3, name: "Meditation", completed: true },
 ];
 
+type ActivePage = "home" | "quests" | "skills" | "tracking";
+
 const HomeScreen = () => {
-  const [activeNav, setActiveNav] = useState("home");
+  const [activeNav, setActiveNav] = useState<ActivePage>("home");
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const [playerLevel] = useState(45);
   const [playerXP] = useState(65);
@@ -41,6 +44,11 @@ const HomeScreen = () => {
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   const codename = localStorage.getItem("userCodename") || "PLAYER";
   const { theme, setTheme, themes } = useTheme();
+
+  // Render Quest Library page
+  if (activeNav === "quests") {
+    return <QuestLibrary onBack={() => setActiveNav("home")} />;
+  }
 
   return (
     <div className="fixed inset-0 system-background overflow-hidden">
@@ -158,7 +166,7 @@ const HomeScreen = () => {
           return (
             <button
               key={item.id}
-              onClick={() => setActiveNav(item.id)}
+              onClick={() => setActiveNav(item.id as ActivePage)}
               onMouseEnter={() => setHoveredNav(item.id)}
               onMouseLeave={() => setHoveredNav(null)}
               className="group flex items-center gap-3"
