@@ -23,14 +23,21 @@ const systemCardVariants = cva(
         md: "p-card-padding",
         lg: "p-6 sm:p-8",
       },
+      cornerSize: {
+        sm: "system-card-sm",
+        md: "",
+        lg: "system-card-lg",
+        xl: "system-card-xl",
+      },
       interactive: {
-        true: "cursor-pointer hover:scale-[1.02]",
+        true: "cursor-pointer hover:scale-[1.01]",
         false: "",
       },
     },
     defaultVariants: {
       variant: "default",
       size: "md",
+      cornerSize: "md",
       interactive: false,
     },
   }
@@ -43,10 +50,10 @@ export interface SystemCardProps
 }
 
 const SystemCard = React.forwardRef<HTMLDivElement, SystemCardProps>(
-  ({ className, variant, size, interactive, ...props }, ref) => (
+  ({ className, variant, size, cornerSize, interactive, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn(systemCardVariants({ variant, size, interactive }), className)}
+      className={cn(systemCardVariants({ variant, size, cornerSize, interactive }), className)}
       {...props}
     />
   )

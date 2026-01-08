@@ -78,6 +78,14 @@
     --radius-full: 9999px;
 
     /* ─────────────────────────────────────────────────────────────────────
+       ANGULAR CORNER CLIP TOKENS (Sci-Fi Frame System)
+    ───────────────────────────────────────────────────────────────────── */
+    --corner-clip-sm: 6px;
+    --corner-clip-md: 10px;
+    --corner-clip-lg: 14px;
+    --corner-clip-xl: 18px;
+
+    /* ─────────────────────────────────────────────────────────────────────
        SHADOW TOKENS (use with shadow-[var(--shadow-*)])
     ───────────────────────────────────────────────────────────────────── */
     --shadow-glow-sm: 0 0 10px hsl(var(--system-glow) / 0.2);
@@ -238,90 +246,142 @@
   /* ─────────────────────────────────────────────────────────────────────
      SYSTEM CARD BASE - Core card styling with glow border
   ───────────────────────────────────────────────────────────────────── */
+  /* ─────────────────────────────────────────────────────────────────────
+     SYSTEM CARD BASE - Angular Sci-Fi Frame (Pure CSS, GPU-free)
+  ───────────────────────────────────────────────────────────────────── */
   .system-card {
+    --_clip: var(--corner-clip-md);
     position: relative;
     background: linear-gradient(
       135deg,
       hsl(var(--system-card)) 0%,
       hsl(220 50% 6%) 100%
     );
-    border: 1px solid hsl(var(--system-border) / 0.4);
-    border-radius: var(--radius-lg);
-    box-shadow:
-      0 0 20px hsl(var(--system-glow) / 0.15),
-      0 0 40px hsl(var(--system-glow) / 0.1),
-      inset 0 1px 0 hsl(var(--system-glow) / 0.1),
-      inset 0 0 20px hsl(var(--system-glow) / 0.05);
-    backdrop-filter: blur(var(--backdrop-blur-md));
-    -webkit-backdrop-filter: blur(var(--backdrop-blur-md));
+    clip-path: polygon(
+      var(--_clip) 0,
+      calc(100% - var(--_clip)) 0,
+      100% var(--_clip),
+      100% calc(100% - var(--_clip)),
+      calc(100% - var(--_clip)) 100%,
+      var(--_clip) 100%,
+      0 calc(100% - var(--_clip)),
+      0 var(--_clip)
+    );
     transition: var(--transition-glow);
   }
 
+  /* Angular gradient border frame using pseudo-element */
   .system-card::before {
     content: '';
     position: absolute;
-    inset: -2px;
-    border-radius: inherit;
-    padding: 2px;
-    pointer-events: none;
+    inset: 0;
     background: linear-gradient(
       135deg,
-      hsl(var(--system-glow) / 0.6) 0%,
-      hsl(var(--system-glow) / 0.2) 25%,
+      hsl(var(--system-glow) / 0.7) 0%,
+      hsl(var(--system-glow) / 0.2) 30%,
       hsl(var(--system-glow) / 0.4) 50%,
-      hsl(var(--system-glow) / 0.1) 75%,
-      hsl(var(--system-glow) / 0.5) 100%
+      hsl(var(--system-glow) / 0.15) 70%,
+      hsl(var(--system-glow) / 0.6) 100%
     );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    animation: borderGlow 3s ease-in-out infinite;
+    clip-path: polygon(
+      var(--_clip) 0,
+      calc(100% - var(--_clip)) 0,
+      100% var(--_clip),
+      100% calc(100% - var(--_clip)),
+      calc(100% - var(--_clip)) 100%,
+      var(--_clip) 100%,
+      0 calc(100% - var(--_clip)),
+      0 var(--_clip)
+    );
+    z-index: -1;
+    pointer-events: none;
   }
 
-  .system-card:hover {
+  /* Inner background fill (creates the border effect) */
+  .system-card::after {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--system-card)) 0%,
+      hsl(220 50% 5%) 100%
+    );
+    clip-path: polygon(
+      calc(var(--_clip) - 1px) 0,
+      calc(100% - var(--_clip) + 1px) 0,
+      100% calc(var(--_clip) - 1px),
+      100% calc(100% - var(--_clip) + 1px),
+      calc(100% - var(--_clip) + 1px) 100%,
+      calc(var(--_clip) - 1px) 100%,
+      0 calc(100% - var(--_clip) + 1px),
+      0 calc(var(--_clip) - 1px)
+    );
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Corner accent dots (top-left and bottom-right) */
+  .system-card-accents::before {
     box-shadow:
-      0 0 30px hsl(var(--system-glow) / 0.3),
-      0 0 60px hsl(var(--system-glow) / 0.15),
-      inset 0 1px 0 hsl(var(--system-glow) / 0.15),
-      inset 0 0 30px hsl(var(--system-glow) / 0.08);
+      calc(var(--_clip) - 2px) -1px 0 2px hsl(var(--system-glow)),
+      calc(-1 * var(--_clip) + 2px) 1px 0 2px hsl(var(--system-glow));
   }
 
-  /* Card variants */
+  .system-card:hover::before {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--system-glow) / 0.9) 0%,
+      hsl(var(--system-glow) / 0.3) 30%,
+      hsl(var(--system-glow) / 0.5) 50%,
+      hsl(var(--system-glow) / 0.25) 70%,
+      hsl(var(--system-glow) / 0.8) 100%
+    );
+  }
+
+  /* Size variants */
+  .system-card-sm { --_clip: var(--corner-clip-sm); }
+  .system-card-lg { --_clip: var(--corner-clip-lg); }
+  .system-card-xl { --_clip: var(--corner-clip-xl); }
+
+  /* Card variants - Warning */
   .system-card-warning::before {
     background: linear-gradient(
       135deg,
       hsl(var(--warning-glow) / 0.8) 0%,
-      hsl(var(--warning-glow) / 0.3) 50%,
-      hsl(var(--warning-glow) / 0.8) 100%
+      hsl(var(--warning-glow) / 0.2) 50%,
+      hsl(var(--warning-glow) / 0.7) 100%
     );
   }
 
+  /* Card variants - Danger */
   .system-card-danger::before {
     background: linear-gradient(
       135deg,
       hsl(var(--danger-glow) / 0.8) 0%,
-      hsl(var(--danger-glow) / 0.3) 50%,
-      hsl(var(--danger-glow) / 0.8) 100%
+      hsl(var(--danger-glow) / 0.2) 50%,
+      hsl(var(--danger-glow) / 0.7) 100%
     );
   }
 
+  /* Card variants - Success */
   .system-card-success::before {
     background: linear-gradient(
       135deg,
       hsl(var(--success-glow) / 0.8) 0%,
-      hsl(var(--success-glow) / 0.3) 50%,
-      hsl(var(--success-glow) / 0.8) 100%
+      hsl(var(--success-glow) / 0.2) 50%,
+      hsl(var(--success-glow) / 0.7) 100%
     );
   }
 
-  .system-card-muted {
-    border-color: hsl(var(--border) / 0.3);
-    box-shadow: none;
-  }
-
+  /* Card variants - Muted */
   .system-card-muted::before {
-    opacity: 0.3;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--border) / 0.4) 0%,
+      hsl(var(--border) / 0.1) 50%,
+      hsl(var(--border) / 0.3) 100%
+    );
   }
 
   /* Legacy alias for backwards compatibility */
