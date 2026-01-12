@@ -3,6 +3,7 @@ import { Home, BookOpen, GitBranch, Activity, Settings, Package, User } from "lu
 import QuestWindow from "./quest/QuestWindow";
 import HabitWindow from "./habit/HabitWindow";
 import QuestLibrary from "./quest-library/QuestLibrary";
+import SkillTreePage from "./skill-tree/SkillTreePage";
 import {
   SystemCard,
   SystemCardTitle,
@@ -48,6 +49,11 @@ const HomeScreen = () => {
   // Render Quest Library page
   if (activeNav === "quests") {
     return <QuestLibrary onBack={() => setActiveNav("home")} />;
+  }
+
+  // Render Skill Tree page
+  if (activeNav === "skills") {
+    return <SkillTreePage onBack={() => setActiveNav("home")} />;
   }
 
   return (
