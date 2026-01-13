@@ -61,7 +61,7 @@ export default function StatusCard({ isOpen, onClose }: StatusCardProps) {
           transition={{ duration: 0.25, ease: 'easeOut' }}
           className="relative z-10 w-full max-w-sm"
         >
-          <SystemCard className="p-5 max-h-[85vh] flex flex-col">
+        <SystemCard className="p-5 max-h-[90vh] flex flex-col overflow-hidden">
             {/* Close button */}
             <button
               onClick={onClose}
@@ -70,12 +70,13 @@ export default function StatusCard({ isOpen, onClose }: StatusCardProps) {
               <X className="w-4 h-4 text-muted-foreground" />
             </button>
 
-            {/* Header */}
-            <SystemCardTitle className="mb-4">STATUS</SystemCardTitle>
-            <SystemCardDivider className="my-0 mb-4" />
+            {/* Header - Fixed */}
+            <SystemCardTitle className="mb-4 flex-shrink-0">STATUS</SystemCardTitle>
+            <SystemCardDivider className="my-0 mb-4 flex-shrink-0" />
 
-            <ScrollArea className="flex-1 -mx-5 px-5">
-              <SystemCardContent className="gap-4">
+            {/* Scrollable Content */}
+            <ScrollArea className="flex-1 overflow-y-auto" style={{ maxHeight: 'calc(90vh - 120px)' }}>
+              <SystemCardContent className="gap-4 pb-4">
                 {/* Identity + Level Section */}
                 <div className="flex items-start justify-between w-full">
                   {/* Left: Identity */}
@@ -103,7 +104,7 @@ export default function StatusCard({ isOpen, onClose }: StatusCardProps) {
                 </div>
 
                 {/* XP Bar */}
-                <div className="w-full">
+                <div className="w-full mt-4">
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="font-system text-[10px] text-muted-foreground tracking-wider">
                       EXPERIENCE
@@ -125,7 +126,7 @@ export default function StatusCard({ isOpen, onClose }: StatusCardProps) {
                   </div>
                 </div>
 
-                <SystemCardDivider className="my-2" />
+                <SystemCardDivider className="my-3" />
 
                 {/* Stats Section */}
                 <div className="w-full">
@@ -146,7 +147,7 @@ export default function StatusCard({ isOpen, onClose }: StatusCardProps) {
                   </div>
                 </div>
 
-                <SystemCardDivider className="my-2" />
+                <SystemCardDivider className="my-3" />
 
                 {/* Skills Preview */}
                 <SkillsSection
