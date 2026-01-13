@@ -5,6 +5,8 @@ import QuestWindow from "./quest/QuestWindow";
 import HabitWindow from "./habit/HabitWindow";
 import QuestLibrary from "./quest-library/QuestLibrary";
 import SkillTreePage from "./skill-tree/SkillTreePage";
+import StatusCard from "./status/StatusCard";
+import { useStatusStore } from "./status/useStatusStore";
 import {
   SystemCard,
   SystemCardTitle,
@@ -40,13 +42,16 @@ const HomeScreen = () => {
   const navigate = useNavigate();
   const [activeNav, setActiveNav] = useState<ActivePage>("home");
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
-  const [playerLevel] = useState(45);
-  const [playerXP] = useState(65);
   const [isQuestWindowOpen, setIsQuestWindowOpen] = useState(false);
   const [isHabitWindowOpen, setIsHabitWindowOpen] = useState(false);
+  const [isStatusCardOpen, setIsStatusCardOpen] = useState(false);
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   const codename = localStorage.getItem("userCodename") || "PLAYER";
   const { theme, setTheme, themes } = useTheme();
+  const { status } = useStatusStore();
+  
+  const playerLevel = status.level.current;
+  const playerXP = Math.round((status.level.currentXP / status.level.requiredXP) * 100);
 
   const handleNavClick = (id: string) => {
     if (id === 'tracking') {
@@ -73,6 +78,9 @@ const HomeScreen = () => {
       
       {/* Habit Window Overlay */}
       <HabitWindow isOpen={isHabitWindowOpen} onClose={() => setIsHabitWindowOpen(false)} />
+      
+      {/* Status Card Overlay */}
+      <StatusCard isOpen={isStatusCardOpen} onClose={() => setIsStatusCardOpen(false)} />
 
       {/* Ambient particle effect */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -82,24 +90,27 @@ const HomeScreen = () => {
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════
-          TOP HUD - PLAYER STATUS (LEFT)
+          TOP HUD - PLAYER STATUS (LEFT) - CLICKABLE
       ═══════════════════════════════════════════════════════════════ */}
-      <div className="absolute top-4 left-4 z-20 flex items-center gap-4">
+      <button
+        onClick={() => setIsStatusCardOpen(true)}
+        className="absolute top-4 left-4 z-20 flex items-center gap-4 group cursor-pointer"
+      >
         {/* Profile Avatar */}
         <div className="relative">
-          <div className="w-14 h-14 rounded-full bg-secondary/50 border-2 border-primary/40 flex items-center justify-center overflow-hidden shadow-glow-md">
-            <User className="w-7 h-7 text-primary/60" />
+          <div className="w-14 h-14 rounded-full bg-secondary/50 border-2 border-primary/40 flex items-center justify-center overflow-hidden shadow-glow-md group-hover:border-primary/70 group-hover:shadow-glow-lg transition-all">
+            <User className="w-7 h-7 text-primary/60 group-hover:text-primary transition-colors" />
           </div>
         </div>
 
         {/* Level & XP */}
         <div className="flex flex-col gap-1">
-          <span className="font-system text-foreground text-lg tracking-wider font-bold">
+          <span className="font-system text-foreground text-lg tracking-wider font-bold group-hover:text-primary transition-colors">
             LVL {playerLevel}
           </span>
           <div className="flex items-center gap-2">
             <span className="font-system text-primary/60 text-xs tracking-wide">XP</span>
-            <div className="w-24 h-2 bg-secondary/50 rounded-full overflow-hidden border border-primary/20">
+            <div className="w-24 h-2 bg-secondary/50 rounded-full overflow-hidden border border-primary/20 group-hover:border-primary/40 transition-all">
               <div 
                 className="h-full bg-gradient-to-r from-primary/60 to-primary rounded-full transition-all duration-slow shadow-glow-sm"
                 style={{ width: `${playerXP}%` }}
@@ -107,7 +118,7 @@ const HomeScreen = () => {
             </div>
           </div>
         </div>
-      </div>
+      </button>
 
       {/* ═══════════════════════════════════════════════════════════════
           TOP RIGHT - UTILITY ICONS
