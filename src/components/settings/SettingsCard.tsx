@@ -10,7 +10,7 @@ import { useSettingsStore } from "./useSettingsStore";
 import { SettingsSection } from "./SettingsSection";
 import { SettingsRow } from "./SettingsRow";
 import { SettingsToggle } from "./SettingsToggle";
-import { DifficultyMode } from "./types";
+import { DifficultyMode, CardDesign } from "./types";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    SETTINGS CARD - Complete settings interface as floating system card
@@ -29,6 +29,12 @@ const difficultyOptions: { value: DifficultyMode; label: string }[] = [
   { value: 'custom', label: 'Custom' },
 ];
 
+const cardDesignOptions: { value: CardDesign; label: string; description: string }[] = [
+  { value: 'designA', label: 'Design A', description: 'Classic angular corners' },
+  { value: 'designB', label: 'Design B', description: 'Rounded edges style' },
+  { value: 'designC', label: 'Design C', description: 'Minimal clean borders' },
+];
+
 const SettingsCard = ({ isOpen, onClose }: SettingsCardProps) => {
   const {
     settings,
@@ -42,6 +48,7 @@ const SettingsCard = ({ isOpen, onClose }: SettingsCardProps) => {
     toggleAIPenaltyQuestSuggestions,
     toggleHighPerformanceMode,
     setColorTheme,
+    setCardDesign,
   } = useSettingsStore();
 
   return (
@@ -301,6 +308,85 @@ const SettingsCard = ({ isOpen, onClose }: SettingsCardProps) => {
                     <div className="px-1 py-2 bg-secondary/20 rounded border border-primary/10">
                       <span className="font-system text-[9px] text-muted-foreground/70 tracking-wide">
                         Theme affects glows, borders, XP bars, and highlights. No dark/light mode. No custom colors.
+                      </span>
+                    </div>
+                  </SettingsSection>
+
+                  {/* SECTION 7: System Card Design */}
+                  <SettingsSection title="System Card Design">
+                    <SettingsRow label="Card Style" description="Applies globally to all system cards">
+                      <div className="w-full" />
+                    </SettingsRow>
+                    
+                    {/* Mini Live Previews Grid */}
+                    <div className="grid grid-cols-3 gap-2 mt-1">
+                      {cardDesignOptions.map((option) => (
+                        <button
+                          key={option.value}
+                          onClick={() => setCardDesign(option.value)}
+                          className={`
+                            relative flex flex-col items-center p-2 rounded transition-all
+                            ${settings.cardDesign === option.value
+                              ? 'ring-2 ring-primary bg-primary/10'
+                              : 'bg-secondary/30 hover:bg-secondary/50 border border-primary/20'
+                            }
+                          `}
+                        >
+                          {/* Mini Card Preview */}
+                          <div 
+                            className={`
+                              w-full aspect-[3/4] mb-1.5 relative overflow-hidden
+                              ${option.value === 'designA' 
+                                ? 'bg-card/80 border border-primary/40 shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]' 
+                                : option.value === 'designB'
+                                  ? 'bg-card/80 border border-primary/30 rounded-lg shadow-md'
+                                  : 'bg-card/80 border border-primary/20'
+                              }
+                            `}
+                            style={{
+                              clipPath: option.value === 'designA' 
+                                ? 'polygon(0 8px, 8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%)'
+                                : option.value === 'designB'
+                                  ? 'none'
+                                  : 'none',
+                              borderRadius: option.value === 'designB' ? '8px' : option.value === 'designC' ? '2px' : '0'
+                            }}
+                          >
+                            {/* Mini content lines */}
+                            <div className="absolute inset-2 flex flex-col gap-1">
+                              <div className="h-1 w-2/3 mx-auto bg-primary/40 rounded-full" />
+                              <div className="h-px w-full bg-primary/20 mt-1" />
+                              <div className="flex-1 flex flex-col gap-0.5 mt-1">
+                                <div className="h-0.5 w-3/4 bg-muted-foreground/30 rounded-full" />
+                                <div className="h-0.5 w-1/2 bg-muted-foreground/20 rounded-full" />
+                                <div className="h-0.5 w-2/3 bg-muted-foreground/30 rounded-full" />
+                              </div>
+                            </div>
+                            
+                            {/* Glow effect for Design A */}
+                            {option.value === 'designA' && (
+                              <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none" />
+                            )}
+                          </div>
+                          
+                          {/* Label */}
+                          <span className="font-system text-[8px] text-foreground/80 tracking-wider">
+                            {option.label}
+                          </span>
+                          
+                          {/* Selected indicator */}
+                          {settings.cardDesign === option.value && (
+                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full flex items-center justify-center">
+                              <div className="w-1.5 h-1.5 bg-background rounded-full" />
+                            </div>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="px-1 py-2 mt-2 bg-secondary/20 rounded border border-primary/10">
+                      <span className="font-system text-[9px] text-muted-foreground/70 tracking-wide">
+                        Selection is saved as a system-level visual parameter. All cards re-render instantly. No per-screen overrides.
                       </span>
                     </div>
                   </SettingsSection>

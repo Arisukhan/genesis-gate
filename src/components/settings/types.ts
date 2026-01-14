@@ -4,6 +4,7 @@
 ═══════════════════════════════════════════════════════════════════════════ */
 
 export type DifficultyMode = 'standard' | 'strict' | 'custom';
+export type CardDesign = 'designA' | 'designB' | 'designC';
 
 export interface SystemSettings {
   // SECTION 1: System Status & Difficulty
@@ -28,6 +29,9 @@ export interface SystemSettings {
   
   // SECTION 6: System Color Theme (only blue/violet as per spec)
   colorTheme: 'blue' | 'violet';
+  
+  // SECTION 7: System Card Design
+  cardDesign: CardDesign;
 }
 
 export const DEFAULT_SETTINGS: SystemSettings = {
@@ -42,4 +46,5 @@ export const DEFAULT_SETTINGS: SystemSettings = {
   aiPenaltyQuestSuggestions: false,
   highPerformanceMode: true,
   colorTheme: 'blue',
+  cardDesign: 'designA',
 };

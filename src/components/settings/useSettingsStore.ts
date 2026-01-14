@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { SystemSettings, DEFAULT_SETTINGS, DifficultyMode } from './types';
+import { SystemSettings, DEFAULT_SETTINGS, DifficultyMode, CardDesign } from './types';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    SETTINGS STORE - Persistent state management for system settings
@@ -33,6 +33,9 @@ interface SettingsStore {
   
   // Theme
   setColorTheme: (theme: 'blue' | 'violet') => void;
+  
+  // Card Design
+  setCardDesign: (design: CardDesign) => void;
 }
 
 export const useSettingsStore = create<SettingsStore>()(
@@ -78,6 +81,10 @@ export const useSettingsStore = create<SettingsStore>()(
       
       setColorTheme: (theme) => set((state) => ({
         settings: { ...state.settings, colorTheme: theme }
+      })),
+      
+      setCardDesign: (design) => set((state) => ({
+        settings: { ...state.settings, cardDesign: design }
       })),
     }),
     {
