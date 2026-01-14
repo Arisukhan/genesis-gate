@@ -6,6 +6,7 @@ import HabitWindow from "./habit/HabitWindow";
 import QuestLibrary from "./quest-library/QuestLibrary";
 import SkillTreePage from "./skill-tree/SkillTreePage";
 import StatusCard from "./status/StatusCard";
+import SettingsCard from "./settings/SettingsCard";
 import { useStatusStore } from "./status/useStatusStore";
 import {
   SystemCard,
@@ -15,7 +16,6 @@ import {
   SystemCardFooter,
   SystemCardHint,
 } from "./ui/system-card";
-import { useTheme, themeMetadata, ThemeName } from "@/hooks/useTheme";
 
 interface NavItem {
   icon: React.ElementType;
@@ -45,9 +45,8 @@ const HomeScreen = () => {
   const [isQuestWindowOpen, setIsQuestWindowOpen] = useState(false);
   const [isHabitWindowOpen, setIsHabitWindowOpen] = useState(false);
   const [isStatusCardOpen, setIsStatusCardOpen] = useState(false);
-  const [showThemeSelector, setShowThemeSelector] = useState(false);
+  const [isSettingsCardOpen, setIsSettingsCardOpen] = useState(false);
   const codename = localStorage.getItem("userCodename") || "PLAYER";
-  const { theme, setTheme, themes } = useTheme();
   const { status } = useStatusStore();
   
   const playerLevel = status.level.current;
@@ -81,8 +80,9 @@ const HomeScreen = () => {
       
       {/* Status Card Overlay */}
       <StatusCard isOpen={isStatusCardOpen} onClose={() => setIsStatusCardOpen(false)} />
-
-      {/* Ambient particle effect */}
+      
+      {/* Settings Card Overlay */}
+      <SettingsCard isOpen={isSettingsCardOpen} onClose={() => setIsSettingsCardOpen(false)} />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-primary/3 rounded-full blur-3xl animate-pulse-glow" />
         <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-primary/2 rounded-full blur-3xl" />
@@ -124,51 +124,18 @@ const HomeScreen = () => {
           TOP RIGHT - UTILITY ICONS
       ═══════════════════════════════════════════════════════════════ */}
       <div className="absolute top-4 right-4 z-20 flex items-center gap-4">
-        {/* Settings with Theme Selector */}
-        <div className="relative">
-          <button 
-            className="group flex flex-col items-center gap-1"
-            onClick={() => setShowThemeSelector(!showThemeSelector)}
-          >
-            <div className="w-12 h-12 rounded-full bg-secondary/40 border border-primary/30 flex items-center justify-center transition-all duration-normal group-hover:border-primary/60 group-hover:shadow-glow-md group-hover:scale-105">
-              <Settings className="w-5 h-5 text-primary/70 group-hover:text-primary transition-colors" />
-            </div>
-            <span className="font-system text-[10px] text-primary/60 tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
-              SETTINGS
-            </span>
-          </button>
-          
-          {/* Theme Selector Dropdown */}
-          {showThemeSelector && (
-            <div className="absolute top-16 right-0 system-card p-3 min-w-[140px] animate-fade-in z-50">
-              <span className="font-system text-[10px] text-muted-foreground tracking-wider block mb-2">
-                THEME
-              </span>
-              <div className="flex flex-col gap-1">
-                {themes.map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => {
-                      setTheme(t);
-                      setShowThemeSelector(false);
-                    }}
-                    className={`flex items-center gap-2 px-2 py-1.5 rounded transition-colors ${
-                      theme === t ? "bg-primary/20" : "hover:bg-secondary/50"
-                    }`}
-                  >
-                    <div
-                      className="w-3 h-3 rounded-full border border-white/20"
-                      style={{ backgroundColor: themeMetadata[t].color }}
-                    />
-                    <span className="font-system text-xs text-foreground">
-                      {themeMetadata[t].label}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+        {/* Settings */}
+        <button 
+          className="group flex flex-col items-center gap-1"
+          onClick={() => setIsSettingsCardOpen(true)}
+        >
+          <div className="w-12 h-12 rounded-full bg-secondary/40 border border-primary/30 flex items-center justify-center transition-all duration-normal group-hover:border-primary/60 group-hover:shadow-glow-md group-hover:scale-105">
+            <Settings className="w-5 h-5 text-primary/70 group-hover:text-primary transition-colors" />
+          </div>
+          <span className="font-system text-[10px] text-primary/60 tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+            SETTINGS
+          </span>
+        </button>
 
         {/* Inventory */}
         <button className="group flex flex-col items-center gap-1">
@@ -302,14 +269,6 @@ const HomeScreen = () => {
           {codename}
         </span>
       </div>
-      
-      {/* Click outside to close theme selector */}
-      {showThemeSelector && (
-        <div 
-          className="fixed inset-0 z-40" 
-          onClick={() => setShowThemeSelector(false)}
-        />
-      )}
     </div>
   );
 };
