@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { FlaskConical, Shield, Gem, Key, Star, Zap } from "lucide-react";
+import { useState, useRef, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FlaskConical, Shield, Gem, Key, Star } from "lucide-react";
 import { InventoryItem, ItemCategory, ItemStatus } from "./types";
 
 interface InventoryGridItemProps {
@@ -9,12 +9,11 @@ interface InventoryGridItemProps {
 }
 
 const categoryIcons: Record<ItemCategory, React.ElementType> = {
-  consumable: FlaskConical,
-  equipment: Shield,
-  material: Gem,
-  key: Key,
-  special: Star,
-  buff: Zap,
+  wearables: FlaskConical,
+  tools: Shield,
+  digital: Gem,
+  health: Key,
+  documents: Star,
 };
 
 const statusColors: Record<ItemStatus, { bg: string; text: string; border: string }> = {
@@ -37,14 +36,45 @@ const statusColors: Record<ItemStatus, { bg: string; text: string; border: strin
 
 const InventoryGridItem = ({ item, onClick }: InventoryGridItemProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [showName, setShowName] = useState(false);
+  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
   const Icon = categoryIcons[item.category];
   const statusStyle = statusColors[item.status];
+
+  // Long press handlers for mobile
+  const handleTouchStart = useCallback(() => {
+    longPressTimer.current = setTimeout(() => {
+      setShowName(true);
+    }, 400);
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+    setShowName(false);
+  }, []);
+
+  // Desktop hover shows name
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    setShowName(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setShowName(false);
+  };
 
   return (
     <motion.button
       onClick={onClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
       className="relative w-full aspect-square group"
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98, y: 2 }}
@@ -149,6 +179,23 @@ const InventoryGridItem = ({ item, onClick }: InventoryGridItemProps) => {
             </span>
           </div>
         )}
+
+        {/* Name label - appears on hover/long-press */}
+        <AnimatePresence>
+          {showName && (
+            <motion.div
+              className="absolute bottom-6 left-1 right-1 text-center pointer-events-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+            >
+              <span className="text-[10px] sm:text-xs font-light text-muted-foreground/70 truncate block">
+                {item.name}
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Usage indicator bar */}
         <div className="absolute bottom-2 left-2 right-2">
