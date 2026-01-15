@@ -7,6 +7,7 @@ import QuestLibrary from "./quest-library/QuestLibrary";
 import SkillTreePage from "./skill-tree/SkillTreePage";
 import StatusCard from "./status/StatusCard";
 import SettingsCard from "./settings/SettingsCard";
+import InventoryPage from "./inventory/InventoryPage";
 import { useStatusStore } from "./status/useStatusStore";
 import {
   SystemCard,
@@ -46,6 +47,7 @@ const HomeScreen = () => {
   const [isHabitWindowOpen, setIsHabitWindowOpen] = useState(false);
   const [isStatusCardOpen, setIsStatusCardOpen] = useState(false);
   const [isSettingsCardOpen, setIsSettingsCardOpen] = useState(false);
+  const [isInventoryOpen, setIsInventoryOpen] = useState(false);
   const codename = localStorage.getItem("userCodename") || "PLAYER";
   const { status } = useStatusStore();
   
@@ -83,6 +85,9 @@ const HomeScreen = () => {
       
       {/* Settings Card Overlay */}
       <SettingsCard isOpen={isSettingsCardOpen} onClose={() => setIsSettingsCardOpen(false)} />
+      
+      {/* Inventory Page Overlay */}
+      {isInventoryOpen && <InventoryPage onClose={() => setIsInventoryOpen(false)} />}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-primary/3 rounded-full blur-3xl animate-pulse-glow" />
         <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-primary/2 rounded-full blur-3xl" />
@@ -138,7 +143,10 @@ const HomeScreen = () => {
         </button>
 
         {/* Inventory */}
-        <button className="group flex flex-col items-center gap-1">
+        <button 
+          className="group flex flex-col items-center gap-1"
+          onClick={() => setIsInventoryOpen(true)}
+        >
           <div className="w-12 h-12 rounded-full bg-secondary/40 border border-primary/30 flex items-center justify-center transition-all duration-normal group-hover:border-primary/60 group-hover:shadow-glow-md group-hover:scale-105">
             <Package className="w-5 h-5 text-primary/70 group-hover:text-primary transition-colors" />
           </div>
