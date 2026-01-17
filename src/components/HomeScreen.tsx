@@ -3,7 +3,7 @@ import { Home, BookOpen, GitBranch, Activity, Settings, Package, User } from "lu
 import { useNavigate } from "react-router-dom";
 import QuestWindow from "./quest/QuestWindow";
 import HabitWindow from "./habit/HabitWindow";
-import QuestLibrary from "./quest-library/QuestLibrary";
+import LibraryPage from "./library/LibraryPage";
 import SkillTreePage from "./skill-tree/SkillTreePage";
 import StatusCard from "./status/StatusCard";
 import SettingsCard from "./settings/SettingsCard";
@@ -26,7 +26,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { icon: Home, label: "HOME", id: "home" },
-  { icon: BookOpen, label: "QUEST LIBRARY", id: "quests" },
+  { icon: BookOpen, label: "LIBRARY", id: "library" },
   { icon: GitBranch, label: "SKILL TREE", id: "skills" },
   { icon: Activity, label: "TRACK LOG", id: "tracking" },
 ];
@@ -37,7 +37,7 @@ const sampleHabits = [
   { id: 3, name: "Meditation", completed: true },
 ];
 
-type ActivePage = "home" | "quests" | "skills" | "tracking";
+type ActivePage = "home" | "library" | "skills" | "tracking";
 
 const HomeScreen = () => {
   const navigate = useNavigate();
@@ -62,9 +62,9 @@ const HomeScreen = () => {
     setActiveNav(id as ActivePage);
   };
 
-  // Render Quest Library page
-  if (activeNav === "quests") {
-    return <QuestLibrary onBack={() => setActiveNav("home")} />;
+  // Render Library page
+  if (activeNav === "library") {
+    return <LibraryPage onBack={() => setActiveNav("home")} />;
   }
 
   // Render Skill Tree page
