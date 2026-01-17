@@ -1,6 +1,8 @@
 export type QuestCategory = "core" | "optional" | "special";
 export type QuestDifficulty = 1 | 2 | 3 | 4 | 5;
 export type HabitFrequency = "daily" | "weekly";
+export type HabitStatus = "active" | "inactive";
+export type HabitDifficulty = "low" | "medium" | "high";
 
 export interface LibraryQuest {
   id: string;
@@ -17,11 +19,16 @@ export interface LibraryQuest {
 export interface LibraryHabit {
   id: string;
   title: string;
-  frequency: HabitFrequency;
-  streak: number;
-  xpPerCompletion: number;
   description: string;
-  linkedSkills?: string[];
+  howToDo: string;
+  frequency: HabitFrequency;
+  status: HabitStatus;
+  frequencyDetail?: string;
+  difficulty?: HabitDifficulty;
+  linkedSkill?: string;
+  linkedInventory?: string;
+  icon?: string;
+  notes?: string;
 }
 
 export interface MasteredQuest {
