@@ -19,7 +19,7 @@ interface StatusCardProps {
 }
 
 export default function StatusCard({ isOpen, onClose }: StatusCardProps) {
-  const { status, updateName } = useStatusStore();
+  const { status, skillsForUI, updateName } = useStatusStore();
   const [expandedStat, setExpandedStat] = useState<string | null>(null);
   const [showSkillsCard, setShowSkillsCard] = useState(false);
 
@@ -151,8 +151,8 @@ export default function StatusCard({ isOpen, onClose }: StatusCardProps) {
 
                 {/* Skills Preview */}
                 <SkillsSection
-                  inProgress={status.skills.inProgress}
-                  mastered={status.skills.mastered}
+                  inProgress={skillsForUI.inProgress}
+                  mastered={skillsForUI.mastered}
                   onExpand={() => setShowSkillsCard(true)}
                 />
               </SystemCardContent>
@@ -167,8 +167,8 @@ export default function StatusCard({ isOpen, onClose }: StatusCardProps) {
           <SkillsCard
             isOpen={showSkillsCard}
             onClose={() => setShowSkillsCard(false)}
-            inProgress={status.skills.inProgress}
-            mastered={status.skills.mastered}
+            inProgress={skillsForUI.inProgress}
+            mastered={skillsForUI.mastered}
           />
         )}
       </AnimatePresence>
