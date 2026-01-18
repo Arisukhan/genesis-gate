@@ -71,33 +71,31 @@ export interface PlayerStatus {
 
 // Default stats template
 export const DEFAULT_STATS: Stat[] = [
-  { id: 'str', name: 'Strength', shortName: 'STR', icon: '💪', value: 10, currentXP: 45, requiredXP: 100, lastUpdated: Date.now() },
-  { id: 'agi', name: 'Agility', shortName: 'AGI', icon: '⚡', value: 8, currentXP: 72, requiredXP: 100, lastUpdated: Date.now() },
-  { id: 'int', name: 'Intelligence', shortName: 'INT', icon: '🧠', value: 15, currentXP: 88, requiredXP: 100, lastUpdated: Date.now() },
-  { id: 'vit', name: 'Vitality', shortName: 'VIT', icon: '❤️', value: 12, currentXP: 33, requiredXP: 100, lastUpdated: Date.now() },
-  { id: 'wis', name: 'Wisdom', shortName: 'WIS', icon: '📖', value: 11, currentXP: 60, requiredXP: 100, lastUpdated: Date.now() },
-  { id: 'per', name: 'Perception', shortName: 'PER', icon: '👁️', value: 9, currentXP: 15, requiredXP: 100, lastUpdated: Date.now() },
+  { id: 'str', name: 'Strength', shortName: 'STR', icon: '💪', value: 1, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
+  { id: 'agi', name: 'Agility', shortName: 'AGI', icon: '⚡', value: 1, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
+  { id: 'int', name: 'Intelligence', shortName: 'INT', icon: '🧠', value: 1, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
+  { id: 'vit', name: 'Vitality', shortName: 'VIT', icon: '❤️', value: 1, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
+  { id: 'wis', name: 'Wisdom', shortName: 'WIS', icon: '📖', value: 1, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
+  { id: 'per', name: 'Perception', shortName: 'PER', icon: '👁️', value: 1, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
 ];
 
-// Default skills
+// Default skills - real-life focused
 export const DEFAULT_SKILLS: StatusSkill[] = [
-  { id: '1', name: 'React Mastery', description: 'Building modern React applications', category: 'progressive', currentXP: 68, requiredXP: 100, stage: 'practicing', linkedStat: 'int', isVisible: true },
-  { id: '2', name: 'TypeScript', description: 'Type-safe JavaScript development', category: 'progressive', currentXP: 45, requiredXP: 100, stage: 'learning', linkedStat: 'int', isVisible: true },
-  { id: '3', name: 'System Design', description: 'Architecting scalable systems', category: 'progressive', currentXP: 22, requiredXP: 100, stage: 'learning', linkedStat: 'wis', isVisible: true },
-  { id: '4', name: 'HTML/CSS', description: 'Web fundamentals', category: 'mastered', currentXP: 100, requiredXP: 100, isVisible: true, masteredAt: Date.now() - 30 * 24 * 60 * 60 * 1000 },
-  { id: '5', name: 'JavaScript', description: 'Core programming language', category: 'mastered', currentXP: 100, requiredXP: 100, isVisible: true, masteredAt: Date.now() - 60 * 24 * 60 * 60 * 1000 },
+  { id: '1', name: 'Deep Work', description: 'Focused, uninterrupted work sessions', category: 'progressive', currentXP: 0, requiredXP: 100, stage: 'learning', linkedStat: 'int', isVisible: true },
+  { id: '2', name: 'Public Speaking', description: 'Presenting ideas clearly to groups', category: 'progressive', currentXP: 0, requiredXP: 100, stage: 'learning', linkedStat: 'per', isVisible: true },
+  { id: '3', name: 'Cooking', description: 'Preparing healthy meals from scratch', category: 'progressive', currentXP: 0, requiredXP: 100, stage: 'learning', linkedStat: 'vit', isVisible: true },
 ];
 
 export const DEFAULT_PLAYER_STATUS: PlayerStatus = {
   identity: {
     name: 'PLAYER',
-    job: 'Aspiring Developer',
-    title: 'The Persistent',
+    job: 'Life Adventurer',
+    title: 'The Beginner',
   },
   level: {
-    current: 45,
-    currentXP: 6500,
-    requiredXP: 10000,
+    current: 1,
+    currentXP: 0,
+    requiredXP: 1000,
   },
   stats: DEFAULT_STATS,
   skills: DEFAULT_SKILLS,
