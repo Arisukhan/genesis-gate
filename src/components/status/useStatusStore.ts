@@ -32,12 +32,59 @@ export interface SkillMasteryEvent {
   timestamp: number;
 }
 
+// Migrate old skills format to new format
+function migrateStatus(data: any): PlayerStatus {
+  // Check if skills is old format (object with inProgress/mastered)
+  if (data.skills && !Array.isArray(data.skills)) {
+    const oldSkills = data.skills as { inProgress?: any[]; mastered?: any[] };
+    const newSkills: StatusSkill[] = [];
+    
+    // Migrate in-progress skills
+    if (oldSkills.inProgress) {
+      oldSkills.inProgress.forEach((skill: any) => {
+        newSkills.push({
+          id: skill.id || `skill-${Date.now()}-${Math.random()}`,
+          name: skill.name,
+          description: skill.description,
+          category: 'progressive',
+          currentXP: skill.currentXP ?? Math.floor((skill.progress || 0)),
+          requiredXP: skill.requiredXP ?? 100,
+          stage: skill.stage || 'learning',
+          linkedStat: skill.linkedStat,
+          isVisible: true,
+        });
+      });
+    }
+    
+    // Migrate mastered skills
+    if (oldSkills.mastered) {
+      oldSkills.mastered.forEach((skill: any) => {
+        newSkills.push({
+          id: skill.id || `skill-${Date.now()}-${Math.random()}`,
+          name: skill.name,
+          description: skill.description,
+          category: 'mastered',
+          currentXP: 100,
+          requiredXP: 100,
+          isVisible: true,
+          masteredAt: skill.masteredAt || Date.now(),
+        });
+      });
+    }
+    
+    return { ...data, skills: newSkills };
+  }
+  
+  return data;
+}
+
 export function useStatusStore() {
   const [status, setStatus] = useState<PlayerStatus>(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       try {
-        return JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        return migrateStatus(parsed);
       } catch {
         return DEFAULT_PLAYER_STATUS;
       }
