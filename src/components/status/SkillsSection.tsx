@@ -8,10 +8,13 @@ interface SkillsSectionProps {
 }
 
 export default function SkillsSection({ inProgress, mastered, onExpand }: SkillsSectionProps) {
+  // Preview rules: first 2 skills sorted by highest completion %
   const displayInProgress = inProgress.slice(0, 2);
-  const moreInProgress = inProgress.length - 2;
+  const moreInProgress = Math.max(0, inProgress.length - 2);
+  
+  // Mastered preview: first 2 skills sorted by completion date
   const displayMastered = mastered.slice(0, 2);
-  const moreMastered = mastered.length - 2;
+  const moreMastered = Math.max(0, mastered.length - 2);
 
   return (
     <div className="w-full">
@@ -26,7 +29,7 @@ export default function SkillsSection({ inProgress, mastered, onExpand }: Skills
         <ChevronRight className="w-4 h-4 text-primary/60" />
       </button>
 
-      {/* Preview content */}
+      {/* Preview content - No scrolling, strict limits */}
       <div className="px-3 pb-2 space-y-3">
         {/* In Progress */}
         <div>
@@ -53,11 +56,16 @@ export default function SkillsSection({ inProgress, mastered, onExpand }: Skills
                 +{moreInProgress} more
               </span>
             )}
+            {displayInProgress.length === 0 && (
+              <span className="text-[10px] text-muted-foreground italic">
+                No skills in progress
+              </span>
+            )}
           </div>
         </div>
 
         {/* Mastered */}
-        {mastered.length > 0 && (
+        {(displayMastered.length > 0 || moreMastered > 0) && (
           <div>
             <span className="font-system text-[10px] text-muted-foreground tracking-wide block mb-1.5">
               MASTERED

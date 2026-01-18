@@ -23,6 +23,29 @@ export default function SkillsCard({ isOpen, onClose, inProgress, mastered }: Sk
 
   if (!isOpen) return null;
 
+  // Get linked stat display name
+  const getStatName = (statId?: string) => {
+    const statNames: Record<string, string> = {
+      str: 'Strength',
+      agi: 'Agility',
+      int: 'Intelligence',
+      vit: 'Vitality',
+      wis: 'Wisdom',
+      per: 'Perception',
+    };
+    return statId ? statNames[statId] || statId.toUpperCase() : null;
+  };
+
+  // Get stage display text
+  const getStageText = (stage?: string) => {
+    const stageLabels: Record<string, string> = {
+      learning: 'Learning',
+      practicing: 'Practicing',
+      refining: 'Refining',
+    };
+    return stage ? stageLabels[stage] || stage : null;
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -82,15 +105,25 @@ export default function SkillsCard({ isOpen, onClose, inProgress, mastered }: Sk
                     <div className={`text-4xl mb-3 ${selectedSkill.isMastered ? 'text-warning' : ''}`}>
                       {selectedSkill.isMastered ? '🏆' : '📚'}
                     </div>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      {selectedSkill.isMastered ? 'Mastered' : 'In Progress'}
+                    <p className="text-sm text-muted-foreground mb-2">
+                      {selectedSkill.isMastered ? 'Mastered' : getStageText(selectedSkill.stage) || 'In Progress'}
                     </p>
                     
+                    {/* Description */}
+                    {selectedSkill.description && (
+                      <p className="text-xs text-foreground/70 mb-4 px-4">
+                        {selectedSkill.description}
+                      </p>
+                    )}
+                    
+                    {/* XP Progress */}
                     {!selectedSkill.isMastered && (
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-xs text-muted-foreground">
+                      <div className="space-y-2 mt-4">
+                        <div className="flex justify-between text-xs text-muted-foreground px-2">
                           <span>Progress</span>
-                          <span className="text-primary">{selectedSkill.progress}%</span>
+                          <span className="text-primary">
+                            {selectedSkill.currentXP} / {selectedSkill.requiredXP} XP ({selectedSkill.progress}%)
+                          </span>
                         </div>
                         <div className="h-2 bg-secondary/50 rounded-full overflow-hidden">
                           <motion.div
@@ -100,6 +133,14 @@ export default function SkillsCard({ isOpen, onClose, inProgress, mastered }: Sk
                             className="h-full bg-gradient-to-r from-primary/60 to-primary rounded-full"
                           />
                         </div>
+                      </div>
+                    )}
+
+                    {/* Linked Stat */}
+                    {selectedSkill.linkedStat && (
+                      <div className="mt-4 text-xs text-muted-foreground">
+                        <span>Linked to: </span>
+                        <span className="text-primary">{getStatName(selectedSkill.linkedStat)}</span>
                       </div>
                     )}
                   </div>
@@ -112,7 +153,7 @@ export default function SkillsCard({ isOpen, onClose, inProgress, mastered }: Sk
                   exit={{ opacity: 0, x: 20 }}
                 >
                   <ScrollArea className="h-[300px] pr-2">
-                    {/* In Progress Section */}
+                    {/* In Progress Section - Fully scrollable */}
                     <div className="mb-4">
                       <span className="font-system text-[10px] text-muted-foreground tracking-wider block mb-2">
                         IN PROGRESS ({inProgress.length})
@@ -124,7 +165,14 @@ export default function SkillsCard({ isOpen, onClose, inProgress, mastered }: Sk
                             onClick={() => setSelectedSkill(skill)}
                             className="w-full flex items-center justify-between p-2 rounded hover:bg-secondary/30 transition-colors"
                           >
-                            <span className="text-sm text-foreground/90">{skill.name}</span>
+                            <div className="flex flex-col items-start">
+                              <span className="text-sm text-foreground/90">{skill.name}</span>
+                              {skill.stage && (
+                                <span className="text-[10px] text-muted-foreground capitalize">
+                                  {getStageText(skill.stage)}
+                                </span>
+                              )}
+                            </div>
                             <div className="flex items-center gap-2">
                               <div className="w-16 h-1.5 bg-secondary/50 rounded-full overflow-hidden">
                                 <div
@@ -138,10 +186,15 @@ export default function SkillsCard({ isOpen, onClose, inProgress, mastered }: Sk
                             </div>
                           </button>
                         ))}
+                        {inProgress.length === 0 && (
+                          <p className="text-xs text-muted-foreground italic py-2">
+                            No skills in progress
+                          </p>
+                        )}
                       </div>
                     </div>
 
-                    {/* Mastered Section */}
+                    {/* Mastered Section - Collapsed by default */}
                     {mastered.length > 0 && (
                       <div>
                         <button
