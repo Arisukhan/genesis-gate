@@ -57,7 +57,7 @@ const SettingsCard = ({ isOpen, onClose }: SettingsCardProps) => {
     // Clear progress-related localStorage keys
     const keysToRemove = [
       'player-status',
-      'skill-tree-storage',
+      'skill-tree-data',
       'track-log-records',
     ];
     keysToRemove.forEach(key => localStorage.removeItem(key));
