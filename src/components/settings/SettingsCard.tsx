@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Minus, Plus } from "lucide-react";
+import { X, Minus, Plus, AlertTriangle } from "lucide-react";
 import {
   SystemCard,
   SystemCardTitle,
@@ -36,6 +37,7 @@ const cardDesignOptions: { value: CardDesign; label: string; description: string
 ];
 
 const SettingsCard = ({ isOpen, onClose }: SettingsCardProps) => {
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
   const {
     settings,
     toggleSystemStatus,
@@ -50,6 +52,19 @@ const SettingsCard = ({ isOpen, onClose }: SettingsCardProps) => {
     setColorTheme,
     setCardDesign,
   } = useSettingsStore();
+
+  const handleResetProgress = () => {
+    // Clear progress-related localStorage keys
+    const keysToRemove = [
+      'player-status',
+      'skill-tree-storage',
+      'track-log-records',
+    ];
+    keysToRemove.forEach(key => localStorage.removeItem(key));
+    
+    // Reload page to reinitialize with defaults
+    window.location.reload();
+  };
 
   return (
     <AnimatePresence>
@@ -389,6 +404,63 @@ const SettingsCard = ({ isOpen, onClose }: SettingsCardProps) => {
                         Selection is saved as a system-level visual parameter. All cards re-render instantly. No per-screen overrides.
                       </span>
                     </div>
+                  </SettingsSection>
+
+                  {/* SECTION 8: Reset Progress */}
+                  <SettingsSection title="Data Management">
+                    <SettingsRow 
+                      label="Reset All Progress"
+                      description="Clear XP, levels, stats. Keep default quests & habits."
+                    >
+                      <button
+                        onClick={() => setShowResetConfirm(true)}
+                        className="px-3 py-1.5 rounded bg-red-500/20 border border-red-500/40 text-red-400 font-system text-[10px] tracking-wider hover:bg-red-500/30 hover:border-red-500/60 transition-all"
+                      >
+                        RESET
+                      </button>
+                    </SettingsRow>
+
+                    <div className="px-1 py-2 bg-red-500/10 rounded border border-red-500/20">
+                      <span className="font-system text-[9px] text-red-400/80 tracking-wide">
+                        ⚠️ This will reset: Main level, all stat XP, skill levels, and track log history. Default quests, habits, and skills remain.
+                      </span>
+                    </div>
+
+                    {/* Confirmation Dialog */}
+                    <AnimatePresence>
+                      {showResetConfirm && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.95 }}
+                          className="mt-3 p-3 bg-red-500/10 border border-red-500/30 rounded"
+                        >
+                          <div className="flex items-center gap-2 mb-3">
+                            <AlertTriangle className="w-4 h-4 text-red-400" />
+                            <span className="font-system text-[11px] text-red-400 tracking-wider">
+                              CONFIRM RESET
+                            </span>
+                          </div>
+                          <p className="font-system text-[10px] text-muted-foreground mb-4">
+                            All progress will be permanently erased. This cannot be undone.
+                          </p>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => setShowResetConfirm(false)}
+                              className="flex-1 px-3 py-2 rounded bg-secondary/40 border border-primary/20 text-foreground/80 font-system text-[10px] tracking-wider hover:border-primary/40 transition-all"
+                            >
+                              CANCEL
+                            </button>
+                            <button
+                              onClick={handleResetProgress}
+                              className="flex-1 px-3 py-2 rounded bg-red-500/30 border border-red-500/50 text-red-400 font-system text-[10px] tracking-wider hover:bg-red-500/40 transition-all"
+                            >
+                              RESET NOW
+                            </button>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </SettingsSection>
 
                 </div>
