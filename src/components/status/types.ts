@@ -71,12 +71,12 @@ export interface PlayerStatus {
 
 // Default stats template
 export const DEFAULT_STATS: Stat[] = [
-  { id: 'str', name: 'Strength', shortName: 'STR', icon: '💪', value: 1, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
-  { id: 'agi', name: 'Agility', shortName: 'AGI', icon: '⚡', value: 1, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
-  { id: 'int', name: 'Intelligence', shortName: 'INT', icon: '🧠', value: 1, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
-  { id: 'vit', name: 'Vitality', shortName: 'VIT', icon: '❤️', value: 1, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
-  { id: 'wis', name: 'Wisdom', shortName: 'WIS', icon: '📖', value: 1, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
-  { id: 'per', name: 'Perception', shortName: 'PER', icon: '👁️', value: 1, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
+  { id: 'str', name: 'Strength', shortName: 'STR', icon: '💪', value: 0, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
+  { id: 'agi', name: 'Agility', shortName: 'AGI', icon: '⚡', value: 0, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
+  { id: 'int', name: 'Intelligence', shortName: 'INT', icon: '🧠', value: 0, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
+  { id: 'vit', name: 'Vitality', shortName: 'VIT', icon: '❤️', value: 0, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
+  { id: 'wis', name: 'Wisdom', shortName: 'WIS', icon: '📖', value: 0, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
+  { id: 'per', name: 'Perception', shortName: 'PER', icon: '👁️', value: 0, currentXP: 0, requiredXP: 100, lastUpdated: Date.now() },
 ];
 
 // Default skills - real-life focused
@@ -93,7 +93,7 @@ export const DEFAULT_PLAYER_STATUS: PlayerStatus = {
     title: 'The Beginner',
   },
   level: {
-    current: 1,
+    current: 0,
     currentXP: 0,
     requiredXP: 1000,
   },
