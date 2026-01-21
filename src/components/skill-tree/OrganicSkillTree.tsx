@@ -112,8 +112,8 @@ const OrganicSkillTree = ({ skills, selectedSkillId, onSelectSkill, onOpenAdd }:
         }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       >
-        {/* Roots (decorative) */}
-        <TreeRoots coreX={corePosition.x} coreY={corePosition.y} />
+        {/* Roots (interactive) */}
+        <TreeRoots coreX={corePosition.x} coreY={corePosition.y} onAddBranch={onOpenAdd} />
 
         {/* Branches connecting core to skills */}
         {positionedSkills.map((skill, index) => (
@@ -122,6 +122,7 @@ const OrganicSkillTree = ({ skills, selectedSkillId, onSelectSkill, onOpenAdd }:
             from={corePosition}
             to={skill}
             index={index}
+            onAddSkillToBranch={onOpenAdd}
           />
         ))}
 
