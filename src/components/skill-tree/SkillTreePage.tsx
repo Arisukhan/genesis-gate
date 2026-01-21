@@ -2,7 +2,7 @@ import { AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Plus, Search, Filter } from 'lucide-react';
 import { useState } from 'react';
 import { useSkillTreeStore } from './useSkillTreeStore';
-import SkillGraph from './SkillGraph';
+import OrganicSkillTree from './OrganicSkillTree';
 import SkillDetailCard from './SkillDetailCard';
 import AddSkillCard from './AddSkillCard';
 
@@ -134,8 +134,8 @@ const SkillTreePage = ({ onBack }: SkillTreePageProps) => {
         )}
       </AnimatePresence>
 
-      {/* Skill Graph */}
-      <SkillGraph
+      {/* Organic Skill Tree */}
+      <OrganicSkillTree
         skills={searchQuery || difficultyFilter ? filteredSkills : skills}
         selectedSkillId={selectedSkillId}
         onSelectSkill={selectSkill}
